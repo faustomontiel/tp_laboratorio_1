@@ -3,51 +3,42 @@
 #include<stdlib.h>
 #include<ctype.h>
 #include<conio.h>
-#include "funciones.h"
+#include "Funciones.h"
 
-#define TAM 5
+#define A 10
 
 
 int main()
 {
-	EMovie peliculas[TAM];
+    EMovie peliculas[A];
 	char seguir='s';
 	char guardar= 's';
-	int cant=0;
+	char nameHTML[50];
+	int contMovie=0;
 	int i;
 
-		for( i=0; i<TAM; i++)
+		for( i=0; i<A; i++)
 		peliculas[i].estado=0;
 
-	if(cargarDesdeArchivo(peliculas))
+		if(cargarDesdeArchivo(peliculas))
 	{
 		printf("No se pudo abrir el fichero");
 	}
 	else
 	{
-		printf("Se cargaron las estructuras con exito\n");
+		printf("Se cargaron las Peliculas con exito\n");
 	}
-
-
-
 
 
 	system("cls");
 	do
 	{
+
 		switch(menu())
 		{
 			case '1':
 				system("cls");
-				 if(alta(peliculas,TAM)==1)
-            {
-                printf("Pelicula cargada con exito!");
-                cant++;
-            }
-            else
-            {
-                printf("No se pudo cargar la película!");
-            }
+				alta(peliculas);
 				break;
 			case '2':
 				system("cls");
@@ -58,12 +49,14 @@ int main()
 				modificar(peliculas);
 				break;
 			case '4':
-                crearPagina(peliculas,cant);
 				system("cls");
+                printf("Ingrese nombre de archivo a guardar: ");
+                scanf("%s",&nameHTML);
+                crearPagina(peliculas,A,nameHTML);
+
 				break;
 			case '5':
-
-				printf("\nGuardar cambios (S para confirmar) ?: ");
+                printf("\nGuardar cambios S/N ?: ");
 				guardar = tolower(getche());
 
 				if(guardar == 's')
@@ -83,12 +76,10 @@ int main()
 
 		}
 	}while(seguir=='s');
-
-
-
 	printf("\n");
 	system("pause");
 }
+
 
 
 

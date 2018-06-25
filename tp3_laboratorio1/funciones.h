@@ -15,7 +15,7 @@ char menu(void);
  *
  * \param recibe un vector de valor pelicula y el tamaño del array a ser guardado.
  */
-int alta(EMovie*,int);
+void alta(EMovie[]);
 /** \brief modifica a la persona del array.
  *
  * \param se ingresa un vector perteneciente a emovie y el tamaño del array.
@@ -45,3 +45,15 @@ int guardarEnArchivo(EMovie *);
  * @return un valor de acuerdo si se puede leer o no.
  */
 int cargarDesdeArchivo(EMovie *);
+/** \brief crea un HTML con los datos ingresados anteriormente
+ *
+ * \param  puntero a peliculas, el tamanio y una cadena .
+ */
+
+void crearPagina(EMovie* peliculas,int tam,char nombre[]);
+/**
+ * convierte una cadena en numero.
+ * @param una cadena de caracteres.
+ * @return un valor si se  paso a un valor numerico .
+ */
+int validarNumero (char numero[]);

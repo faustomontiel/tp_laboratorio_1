@@ -5,7 +5,7 @@
 #include<conio.h>
 #include "funciones.h"
 
-#define TAM 5
+#define A 5
 
 char menu()
 {       char c;
@@ -17,73 +17,132 @@ char menu()
         printf("3- Modificar pelicula\n");
         printf("4- Generar pagina web\n");
         printf("5- Salir y Guardar\n");
-	printf("Elija una opcion: ");
+	printf("Elija una opcion <1-5>: ");
 	c=getche();
 	return c;
 }
 
-int buscarLibre(EMovie* peliculas)
+
+int buscarLibre(EMovie peliculas[])
 {
 	int index=-1;
 	int i;
-	for( i=0; i < TAM; i++)
-	   if((peliculas+i)->estado==0){
+	for( i=0; i < A; i++)
+	   if(peliculas[i].estado==0){
 		index=i;
 		break;
 	   }
 	return index;
 }
 
-int alta(EMovie* peliculas,int tam)
+void alta(EMovie peliculas[])
 {
-    int returnAUX=0;
-	int lugar=0;
-    char titulo[51];
-    char genero[41];
-    int duracion;
-    char descripcion[2000];
-    int puntaje;
-    char imagen[500];
-    int estado;
-    int i;
-    int esta;
-
-	lugar=buscarLibre(peliculas);
-	if(lugar!=-1)
+	int index, i;
+    char duracion[5];
+    char puntaje[5];
+	char titulo[50];
+	int esNumero;
+	int encontro=0;
+	/*Buscamos cual es el primer indice libre dentro del array*/
+	index=buscarLibre(peliculas);
+	if(index!=-1)//si hay lugar:
 	{
 
+		printf("INGRESO DE DATOS:\n");
 		printf("Ingrese titulo: ");
-		fflush(stdin);
-        gets(titulo);
+		gets(titulo);
+		 esNumero = validarString(titulo);
 
-		for(i=0; i<tam; i++)
+        while (esNumero == 1)
+        {
+            printf("Error. Nombre incorrecto, reingrese el nombre: ");
+            fflush(stdin);
+            gets(titulo);
+            esNumero = validarString(titulo);
+
+        }
+		/*Buscamos si el legajo ya existe*/
+		for(i=0; i<A; i++)
 		{
-			if(strcmp((peliculas+i)->titulo,titulo)==0)
+			if(strcmp(peliculas[i].titulo,titulo)==0)
 			{
-				lugar=1;
+				encontro=1;//encontro en true
 				break;
 			}
 		}
-		if(!lugar)
+		if(!encontro)//entra si encontro==0
 		{
-        strcpy(peliculas->titulo,titulo);
+        strcpy(peliculas[index].titulo,titulo);
 
         printf("Ingrese genero: ");
         fflush(stdin);
-        gets(genero);
+        gets(peliculas[index].genero);
+        esNumero = validarString(peliculas[index].genero);
+
+        while (esNumero == 1)
+        {
+            printf("Error. Nombre incorrecto, reingrese el nombre: ");
+            fflush(stdin);
+            gets(peliculas[index].genero);
+            esNumero = validarString(peliculas[index].genero);
+
+        }
+
+
+
         printf("Ingrese duracion (minutos): ");
-        scanf("%d",&duracion);
+        gets(duracion);
+        esNumero = validarNumero(duracion);
+
+        while (esNumero == 1)
+        {
+            printf("Error. numero incorrecta, reingrese la numero: ");
+            fflush(stdin);
+            gets(duracion);
+            esNumero = validarNumero(duracion);
+        }
+
+        peliculas[i].duracion = atoi(duracion);
+
         printf("Ingrese descripcion: ");
         fflush(stdin);
-        gets(descripcion);
+        gets(peliculas[index].descripcion);
+
+        esNumero = validarString(peliculas[index].descripcion);
+
+        while (esNumero == 1)
+        {
+            printf("Error. Nombre incorrecto, reingrese el nombre: ");
+            fflush(stdin);
+            gets(peliculas[index].descripcion);
+            esNumero = validarString(peliculas[index].descripcion);
+
+        }
+
+
+
         printf("Ingrese puntaje: ");
-        scanf("%d",&puntaje);
+        gets(puntaje);
+         esNumero = validarNumero(puntaje);
+
+        while (esNumero == 1)
+        {
+            printf("Error. numero incorrecta, reingrese la numero: ");
+            fflush(stdin);
+            gets(puntaje);
+            esNumero = validarNumero(puntaje);
+        }
+
+        peliculas[i].puntaje = atoi(puntaje);
+
+
+
+
         printf("ingrese el Link a la imagen: ");
         fflush(stdin);
-        gets(imagen);
-        estado=1;
-        returnAUX=1;
+        gets(peliculas[index].linkImagen);
 
+        peliculas[index].estado=1;
 			system("cls");
 		}
 		else
@@ -97,116 +156,225 @@ int alta(EMovie* peliculas,int tam)
 		printf("No queda espacio");
 		getch();
 	}
-	return returnAUX;
 }
 
+void toString(EMovie* unaPeli)
+{
+	printf("%d\t\t%s\t\t%s\n", unaPeli->puntaje, unaPeli->titulo, unaPeli->genero);
+}
+
+void listar(EMovie* peliculas)
+{
+	int i,j;
+
+
+	printf("Puntaje\tTitulo\tGenero\n");
+	for(i=0; i<A; i++)
+	{
+		if(peliculas[i].estado==1)
+		   toString((peliculas + i));
+
+	}
+	getch();
+}
 void baja(EMovie* peliculas)
 {
-	int flag=0,i;
-	char titulo[51];
+	int  flag=0,i;
 	char opcion;
+	char titulo[50];
+    int esNumero;
 
 
-	for(i=0; i<TAM; i++)
+	for(i=0; i<A; i++)
 	{
 
-        printf("Ingrese titulo de la Pelicula a borrar: ");
-     	fflush(stdin);
-        gets(titulo);
 
+		if(peliculas[i].estado==1){
+                printf("\nPELICULAS A ELIMINAR. PRESIONE UNA TECLA PARA ELEGIR UNA\n\n");
+        listar(peliculas+i);
+
+
+
+    printf("Ingrese titulo a dar de baja: ");
+	   gets(titulo);
+	   esNumero = validarString(titulo);
+
+        while (esNumero == 1)
+        {
+            printf("Error. Nombre incorrecto, reingrese el nombre: ");
+            fflush(stdin);
+            gets(titulo);
+            esNumero = validarString(titulo);
+
+        }
 		if(strcmp((peliculas+i)->titulo,titulo)==0)
 		{
-		    printf("Datos a eliminar:\n");
+			printf("Datos a eliminar:\n");
 
 			toString((peliculas + i));
 
-			printf("\nConfirma dar de baja?");
+			printf("\nLegajo encontrado. ¨Seguro desea dar de baja?");
 			opcion=getche();
 			if(opcion=='s')
 			{
 				peliculas[i].estado=0;
-				//guardarEnArchivo(peliculas);
-				printf("­-Pelicula borrada--");
+				printf("­­Pelicula eliminada!!");
 				system("pause");
 			}
 			else
 			{
-				printf("--La pelicula no fue borrada--");
+				printf("El registro no fue eliminado!");
 			}
 			flag=1;
 			break;
 		}
+		}else{
+	    printf("\n\nNO SE HAN INGRESADO PELICULAS\n");
+	    break;
+	}
 	}
 	if(flag==0)
 	{
-		printf("Esa Pelicula no  existe");
+		printf("\nPelicula inexistente");
 		getch();
 	}
-
 }
 void modificar(EMovie* peliculas)
 {
-
-	char tituloModificar[51];
+    char tituloModificar[51];
     char opcion;
     char titulo[51];
     char genero[41];
-    int duracion;
+    char duracion[5];
     char descripcion[2000];
-    int puntaje;
+    char puntaje[5];
     char imagen[500];
     int estado;
     int i;
     int flag=0;
-
+    int esNumero;
 	system("cls");
 
-	for( i=0; i<TAM; i++)
+	for( i=0; i<A; i++)
 	{
-	    printf("Titulos de peliculas a modificar:\n");
 
-            printf("--%s--\n",(peliculas+i)->titulo);
+	if(peliculas[i].estado==1){
+            printf("\nPELICULAS A MODIFICAR. PRESIONE UNA TECLA PARA ELEGIR UNA\n\n");
+        listar(peliculas+i);
+	}else{
+	    printf("\n\nNO SE HAN INGRESADO PELICULAS\n");
+	    break;
+	}
 
-        printf("Ingrese titulo de la Pelicula a modificar: ");
-     	fflush(stdin);
-        gets(titulo);
+	    printf("Ingrese titulo a modificar: ");
+	gets(titulo);
+	esNumero = validarString(titulo);
 
-		if(strcmp((peliculas+i)->titulo,titulo)==0)
-		{
-
-
-            printf("Ingrese titulo: ");
+        while (esNumero == 1)
+        {
+            printf("Error. Nombre incorrecto, reingrese el nombre: ");
             fflush(stdin);
             gets(titulo);
-            printf("Ingrese genero: ");
-            fflush(stdin);
-            gets(genero);
-            printf("Ingrese duracion (minutos): ");
-            scanf("%d",&duracion);
-            printf("Ingrese descripcion: ");
-            fflush(stdin);
-            gets(descripcion);
-            printf("Ingrese puntaje: ");
-            scanf("%d",&puntaje);
-            printf("ingrese el Link a la imagen: ");
-            fflush(stdin);
-            gets(imagen);
+            esNumero = validarString(titulo);
 
-            estado=1;
+        }
+		if(strcmp((peliculas+i)->titulo,titulo)==0)
+		{
+			printf("Datos encontrados:\n");
+
+			toString((peliculas + i));
+
+			printf("Ingrese nuevo titulo: ");
+            fflush(stdin);
+            gets(titulo);
+            esNumero = validarString(titulo);
+
+        while (esNumero == 1)
+        {
+            printf("Error. Nombre incorrecto, reingrese el nombre: ");
+            fflush(stdin);
+            gets(titulo);
+            esNumero = validarString(titulo);
+
+        }
+            printf("Ingrese nuevo genero: ");
+        fflush(stdin);
+        gets(peliculas[i].genero);
+        esNumero = validarString(peliculas[i].genero);
+
+        while (esNumero == 1)
+        {
+            printf("Error. Nombre incorrecto, reingrese el nombre: ");
+            fflush(stdin);
+            gets(peliculas[i].genero);
+            esNumero = validarString(peliculas[i].genero);
+
+        }
+
+
+
+        printf("Ingrese nueva duracion (minutos): ");
+        gets(duracion);
+        esNumero = validarNumero(duracion);
+
+        while (esNumero == 1)
+        {
+            printf("Error. numero incorrecta, reingrese la numero: ");
+            fflush(stdin);
+            gets(duracion);
+            esNumero = validarNumero(duracion);
+        }
+
+        peliculas[i].duracion = atoi(duracion);
+
+        printf("Ingrese nueva descripcion: ");
+        fflush(stdin);
+        gets(peliculas[i].descripcion);
+
+        esNumero = validarString(peliculas[i].descripcion);
+
+        while (esNumero == 1)
+        {
+            printf("Error. Nombre incorrecto, reingrese el nombre: ");
+            fflush(stdin);
+            gets(peliculas[i].descripcion);
+            esNumero = validarString(peliculas[i].descripcion);
+
+        }
+
+
+
+        printf("Ingrese nuevo puntaje: ");
+        gets(puntaje);
+         esNumero = validarNumero(puntaje);
+
+        while (esNumero == 1)
+        {
+            printf("Error. numero incorrecta, reingrese el numero: ");
+            fflush(stdin);
+            gets(puntaje);
+            esNumero = validarNumero(puntaje);
+        }
+
+        peliculas[i].puntaje = atoi(puntaje);
+
+
+
+
+        printf("ingrese nuevo el Link a la imagen: ");
+        fflush(stdin);
+        gets(peliculas[i].linkImagen);
+
 
 			printf("Esta seguro que desea modificar? ");
 			opcion=getche();
 			if(opcion=='s')
 			{
-				strcpy(peliculas->titulo,titulo);
-                strcpy(peliculas->genero,genero);
-                peliculas->duracion=duracion;
-                strcpy(peliculas->descripcion,descripcion);
-                peliculas->puntaje=puntaje;
-                strcpy(peliculas->linkImagen,imagen);
-                peliculas->estado=estado;
 
-				printf("Registro modificado");
+               // peliculas->estado=estado;
+
+				printf("Pelicula modificada");
+				system("pause");
 			}
 			else
 			{
@@ -218,39 +386,38 @@ void modificar(EMovie* peliculas)
 	}
 	if(flag==0)
 	{
-		printf("pelicula inexistente inexistente");
+		printf("\nPelicula inexistente");
 		getch();
 	}
 }
 
-
-int guardarEnArchivo(EMovie * pel)
+int guardarEnArchivo(EMovie * x)
 {
 
 	FILE *f;
 
-		f=fopen("bin.dat","wb");
+		f=fopen("pelis.dat","wb");
 		if(f == NULL)
 		{
 			return 1;
 		}
 
-	fwrite(pel,sizeof(EMovie),TAM,f);
+	fwrite(x,sizeof(EMovie),A,f);
 
 	fclose(f);
 
 	return 0;
 }
 
-int cargarDesdeArchivo(EMovie *pel)
+int cargarDesdeArchivo(EMovie *x)
 {
 	int flag = 0;
 	FILE *f;
 
-	f=fopen("bin.dat", "rb");
+	f=fopen("pelis.dat", "rb");
 	if(f==NULL)
 	{
-		f= fopen("bin.dat", "wb");
+		f= fopen("pelis.dat", "wb");
 		if(f==NULL)
 		{
 			return 1;
@@ -262,41 +429,78 @@ int cargarDesdeArchivo(EMovie *pel)
 
 	if(flag ==0)
 	{
-	fread(pel,sizeof(EMovie),TAM,f);
+	fread(x,sizeof(EMovie),A,f);
     }
 
 	fclose(f);
 	return 0;
 
 }
-void crearPagina(EMovie* peliculas, int tam)
+void crearPagina(EMovie* peliculas,int tam,char nombre[])
+
 {
-    FILE* archivo;
-    int i;
+     int i;
+     FILE *H;
+     strcat(nombre,".html");
+     H=fopen(nombre, "w");
 
-    archivo=fopen("peliculas.html","w");
-    if(archivo==NULL)
-    {
-        printf("La pagina no se va a poder generar.");
-    }
-    else
-    {
+     if(H == NULL)
+     {
+          printf("No se pudo abrir el archivo\n");
+     }
+     else
+     {
+         for(i=0; i<tam; i++)
+         {
+             if((peliculas+i)->estado==1){
+             fprintf(H,"<article class='col-md-4 article-intro'>\n<a href='#'>\n");
+             fprintf(H,"<img class='img-responsive img-rounded' src='");
+             if((peliculas+i)->duracion>0)
+             {
+                 fprintf(H,"%s'\n\nalt=''>\n </a>\n <h3>\n <a href='#'>", (peliculas+i)->linkImagen);
+                 fprintf(H,"%s</a>\n </h3>\n<ul>\n<li>", (peliculas+i)->titulo);
+                 fprintf(H,"Genero: %s</li>\n<li>", (peliculas+i)->genero);
+                 fprintf(H,"Puntaje: %d</li>\n<li>", (peliculas+i)->puntaje);
+                 fprintf(H,"Duracion: %d</li>\n</ul>\n <p>", (peliculas+i)->duracion);
+                 fprintf(H,"%s</p>\n</article>\n", (peliculas+i)->descripcion);
+             }
 
-        for(i=0;i<tam;i++)
+         }
+         }
+      }
+
+      fclose(H);
+
+      printf("Archivo HTML creado con exito.\n");
+      system("pause");
+}
+int validarString (char cadena[])
+{
+    int esNumero = 0;
+
+    for (int i = 0; i < strlen(cadena); i++)
+    {
+        if (isalpha(cadena[i]) == 0)
         {
-
-            fprintf(archivo,"<img  src=%s alt=%s style=width:200px;hight:200px>",(peliculas+i)->linkImagen,(peliculas+i)->titulo);
-            fprintf(archivo,"<h2><a href=#>%d)%s</a></h2>",i+1,(peliculas+i)->titulo);
-            fprintf(archivo,"<h4><li> Genero: %s</li>   <li>Puntaje: %d </li>     <li>Duracion: %d </li>            <li> DESCRIPCION: %s</li>   </h4>",(peliculas+i)->genero,(peliculas+i)->puntaje,(peliculas+i)->duracion,(peliculas+i)->descripcion);
-
-        fprintf(archivo,"</html> </body>");
+            esNumero = 1;
+        }
     }
-    fclose(archivo);
-    printf("La pagina se genero correctamente.\n");
-}
-}
-void toString(EMovie* pelicula)
-{
-	printf("%s\t\t%s\n",  pelicula->titulo, pelicula->genero);
+    return esNumero;
 }
 
+int validarNumero (char numero[])
+{
+    int esNumero = 0;
+    int len;
+
+    len = strlen(numero);
+
+    for (int i = 0; i < len; i++)
+    {
+        if (isdigit(numero[i]) == 0)
+        {
+            esNumero = 1;
+        }
+    }
+    return esNumero;
+}

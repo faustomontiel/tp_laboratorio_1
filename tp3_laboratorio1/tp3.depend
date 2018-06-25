@@ -35,3 +35,21 @@
 	<conio.h>
 	"funciones.h"
 
+1529928379 source:c:\users\nelso\downloads\tp_laboratorio_1-master\tp3_laboratorio1\funciones.c
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<ctype.h>
+	<conio.h>
+	"funciones.h"
+
+1529928798 c:\users\nelso\downloads\tp_laboratorio_1-master\tp3_laboratorio1\funciones.h
+
+1529925028 source:c:\users\nelso\downloads\tp_laboratorio_1-master\tp3_laboratorio1\main.c
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<ctype.h>
+	<conio.h>
+	"Funciones.h"
+
